@@ -5,13 +5,26 @@ const apiKey = process.env.AZURE_OPENAI_KEY;
 const deployment = process.env.AZURE_OPENAI_DEPLOYMENT_NAME;
 
 module.exports = async function (context, req) {
-  const client = new OpenAIClient(endpoint, new AzureKeyCredential(apiKey));
-  const userMsg = req.body.message;
+  try {
+    const userMsg = req.body.message || "";
 
-  const completion = await client.getChatCompletions(deployment, [
-    { role: "user", content: userMsg },
-  ]);
+    const client = new OpenAIClient(endpoint, new AzureKeyCredential(apiKey));
+    const result = await client.getChatCompletions(deployment, [
+      { role: "user", content: userMsg },
+    ]);
 
-  const reply = completion.choices[0].message.content;
-  context.res = { body: { reply } };
+    const reply = result.choices[0].message.content;
+
+    context.res = {
+      headers: { "Content-Type": "application/json" },
+      body: { reply: reply },
+    };
+  } catch (err) {
+    context.log("ERROR:", err.message);
+    context.res = {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+      body: { reply: "Server error: " + err.message },
+    };
+  }
 };
