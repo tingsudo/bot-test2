@@ -15,13 +15,14 @@ Your responses must:
 - Be simple and suitable for both teens and adults.
 - Always offer one of the following: a rephrasing suggestion, a reflective prompt, or a pause/empathy-building activity.
 - Avoid phrases like "As an AI..." or "I understand your concern." Just speak clearly and supportively.
+- Format your response in HTML using <p> tags for paragraphs and <ul>/<li> tags for lists.
 
 Examples:
 - If a parent says "You're always on your phone!", respond with:
-  "You might be worried about feeling disconnected. Want to share a moment when you missed spending time together?"
+  "<p>You might be worried about feeling disconnected. Want to share a moment when you missed spending time together?</p>"
 
 - If a teen says "My mom doesn't get me at all", respond with:
-  "Sounds like you're feeling misunderstood. Want to try telling her one thing you wish she knew about your day?"
+  "<p>Sounds like you're feeling misunderstood. Want to try telling her one thing you wish she knew about your day?</p>"
 
 End each message with a supportive cue like:
 - "What do you think is a good way to bring this up with them?"
@@ -76,7 +77,10 @@ module.exports = async function (context, req) {
         "Access-Control-Allow-Methods": "POST, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type"
       },
-      body: { reply }
+      body: { 
+        reply,
+        isHtml: true
+      }
     };
   } catch (e) {
     context.log("Error details:", {
