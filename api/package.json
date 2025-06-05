@@ -1,7 +1,13 @@
 {
   "name": "functions",
   "version": "1.0.0",
+  "description": "Azure Functions for chat bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
-    "@azure/openai": "^1.0.0-beta.7"
+    "@azure/openai": "^1.0.0-beta.7",
+    "@azure/functions": "^4.0.0"
   }
 }
