@@ -2,6 +2,17 @@
 <html>
   <head>
     <title>ChatGPT on Azure</title>
+    <style>
+      #chatBox {
+        height: 300px;
+        overflow-y: scroll;
+        border: 1px solid gray;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+      .user-msg { color: blue; margin: 5px 0; }
+      .gpt-msg { color: green; margin: 5px 0; }
+    </style>
   </head>
   <body>
     <h2>Chat with GPT</h2>
@@ -11,19 +22,30 @@
 
     <script>
       async function send() {
-        const input = document.getElementById("input").value;
+        const inputField = document.getElementById("input");
+        const input = inputField.value;
         const chatBox = document.getElementById("chatBox");
-        chatBox.innerHTML += `<div><b>You:</b> ${input}</div>`;
 
-        const res = await fetch("/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: input }),
-        });
+        if (!input.trim()) return;
 
-        const data = await res.json();
-        chatBox.innerHTML += `<div><b>GPT:</b> ${data.reply}</div>`;
-        document.getElementById("input").value = "";
+        chatBox.innerHTML += `<div class='user-msg'><b>You:</b> ${input}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+        inputField.value = "";
+
+        try {
+          const res = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: input }),
+          });
+
+          const data = await res.json();
+          chatBox.innerHTML += `<div class='gpt-msg'><b>GPT:</b> ${data.reply}</div>`;
+        } catch (err) {
+          chatBox.innerHTML += `<div class='gpt-msg'><b>GPT:</b> Error: ${err.message}</div>`;
+        }
+
+        chatBox.scrollTop = chatBox.scrollHeight;
       }
     </script>
   </body>
