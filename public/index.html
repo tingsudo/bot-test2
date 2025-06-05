@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ChatGPT on Azure</title>
+  </head>
+  <body>
+    <h2>Chat with GPT</h2>
+    <div id="chatBox"></div>
+    <input id="input" placeholder="Type your question" />
+    <button onclick="send()">Send</button>
+
+    <script>
+      async function send() {
+        const input = document.getElementById("input").value;
+        const chatBox = document.getElementById("chatBox");
+        chatBox.innerHTML += `<div><b>You:</b> ${input}</div>`;
+
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: input }),
+        });
+
+        const data = await res.json();
+        chatBox.innerHTML += `<div><b>GPT:</b> ${data.reply}</div>`;
+        document.getElementById("input").value = "";
+      }
+    </script>
+  </body>
+</html>
